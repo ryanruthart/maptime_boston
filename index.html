@@ -25,7 +25,11 @@
         minZoom: 9
         }).addTo(map);
 
-    // load GeoJSON from an external file
+    // load polygon GeoJSON showing neighbourhoods
+    $.getJSON("neighborhoods.geojson", function(polygonData){
+        L.geoJson(polygonData).addTo(map);
+
+    });    // load GeoJSON from an external file
     $.getJSON("rodents.geojson",function(data){
         // set up the icon to be used
         var ratIcon = L.icon({
@@ -43,6 +47,7 @@
         }  ).addTo(map);
 
     });
+
 
 
   </script>
