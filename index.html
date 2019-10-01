@@ -3,6 +3,7 @@
   <title>A Leaflet map!</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="jquery-2.1.1.min.js"></script> 
   <style>
     #map{ width: 900px; height: 500px; }
   </style>
@@ -13,16 +14,36 @@
 
   <script>
 
-  // initialize the map
-  var map = L.map('map').setView([42.35, -71.08], 13);
+    // initialize the map
+    var map = L.map('map').setView([42.35, -71.08], 13);
 
-  // load a tile layer
-  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
-    {
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
+    // load a tile layer
+    L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+        {
+        attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+        maxZoom: 17,
+        minZoom: 9
+        }).addTo(map);
+
+    // load GeoJSON from an external file
+    $.getJSON("rodents.geojson",function(data){
+        // set up the icon to be used
+        var ratIcon = L.icon({
+        iconUrl: 'rat.png',
+        iconSize: [50,40]
+        }); 
+        
+        // use the json to create a leaflet marker
+        L.geoJson(data, {
+            pointToLayer: function(feature,latlng){
+                var marker = L.marker(latlng,{icon: ratIcon});
+                marker.bindPopup(feature.properties.Location + '</br/>' + feature.properties.OPEN_DT);
+                return marker;
+            }
+        }  ).addTo(map);
+
+    });
+
 
   </script>
 </body>
